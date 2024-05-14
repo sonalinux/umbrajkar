@@ -1,0 +1,48 @@
+
+[root@ansible keep_changes]# cat temp.yml
+---
+- hosts: hosts
+  debugger: on_failed
+  remote_user: sysadminreg
+  become: true
+  vars:
+    users:
+      - username: "syswatcher"
+        password: "$1$v5KO2/Cn$4UMZOFK6JcWx7n8bL./qe1"
+        monitor_commands: "/usr/bin/top, /usr/bin/free, /bin/df, /usr/bin/du, /bin/ping, /bin/ps_mem, /usr/bin/uptime, /bin/cat, /usr/local/bin/nmqt, /bin/ps, /usr/bin/smem, /usr/bin/sar, /bin/grep, /bin/cat, /bin/zcat, /bin/zgrep, /usr/bin/history, /usr/bin/find, /bin/ls, /usr/bin/tail, /usr/bin/head, /usr/bin/less, /usr/bin/cut, /usr/bin/watch, /usr/bin/sort, /usr/bin/uniq, /usr/sbin/mailq, /bin/sed, /usr/sbin/postcat, /usr/bin/diff, /usr/bin/zdiff, /usr/bin/mtr, /usr/sbin/fping, /usr/bin/traceroute /bin/cd"
+
+  tasks:
+    - name:
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.password }}"
+        shell: /bin/bash
+        create_home: yes
+      loop: "{{ users }}"
+
+    - name:
+      lineinfile: 
+        insertafter: '^# %wheel'
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ item.username }} .*'
+        line: '{{ item.username }} ALL=(ALL) NOPASSWD: {{ item.monitor_commands }}'
+        backup: yes
+        validate: '/usr/sbin/visudo -cf %s'
+      loop: "{{ users }}"
+
+
+
+root@ansible keep_changes]# cat temp_sudo.yml
+[hosts]
+
+
+139.59.0.110
+128.199.135.42
+
+#ansible_user=-p9uHmgts
+#ansible_password=Sysadm!n@Gm@1l
+#ansible_ssh_common_args=' -C -o StrictHostKeyChecking=no'
+
+ansible-playbook -i temp_sudo.yml temp.yml
+
