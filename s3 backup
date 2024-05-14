@@ -1,0 +1,23 @@
+root@wapi3in whatsapp_api]# cat /root/s3_backup.sh
+set -x
+
+date1=$(date --date="1 day ago" +%Y%m%d)
+date2=$(date --date="1 day ago" +%Y-%m-%d)
+date2A=$(date --date="7 day ago" +%Y%m%d)
+
+mkdir -p /var/log/apps/whatsapp_api_CloudOptinChecker/old_logs/"$date1"
+mkdir -p /var/log/apps/whatsapp_api/old_logs/"$date1"
+mkdir -p /opt/transmail/whatsapp_api/campaign/old_logs/"$date1"
+
+find /var/log/apps/whatsapp_api_CloudOptinChecker -type f -name "whatsapp_apiV2.*${date2}*.gz" -exec mv {} /var/log/apps/whatsapp_api_CloudOptinChecker/old_logs/"$date1"/ \;
+find /var/log/apps/whatsapp_api -type f -name "whatsapp_apiV2.*${date2}*.gz" -exec mv {} /var/log/apps/whatsapp_api/old_logs/"$date1"/ \;
+find /opt/transmail/whatsapp_api/campaign/*_"$date1"* -type f -exec mv {} /opt/transmail/whatsapp_api/campaign/old_logs/"$date1" \;
+
+
+
+
+/bin/aws --profile sysbackup  s3 mv --recursive /var/log/apps/whatsapp_api_CloudOptinChecker/old_logs/"$date2A" s3://nc-serverbackup-mu/wapi3in/whatsapp_api_CloudOptinChecker/"$date2A"
+/bin/aws --profile sysbackup  s3 mv --recursive /var/log/apps/whatsapp_api/old_logs/"$date2A" s3://nc-serverbackup-mu/wapi3in/whatsapp_api/"$date2A"
+/bin/aws --profile sysbackup  s3 mv --recursive /opt/transmail/whatsapp_api/campaign/old_logs/"$date2A" s3://nc-serverbackup-mu/wapi3in/campaign/"$date2A"
+/bin/aws --profile sysbackup  s3 mv --recursive /opt/transmail/whatsapp_api/campaign/media/old_logs/"$date2A" s3://nc-serverbackup-mu/wapi3in/media/"$date2A"
+*****************************************************************************************
