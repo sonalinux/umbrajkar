@@ -1,0 +1,26 @@
+Log rotation
+
+#!/bin/bash
+set -x
+DATE=$(date +%Y%m%d)
+cp /var/log/mongodb/mongod.log /database/rotated-log/mongod.log-"$DATE" && > /var/log/mongodb/mongod.log
+chown mongod:mongod /database/rotated-log/mongod.log-"$DATE"
+gzip /database/rotated-log/mongod.log-"$DATE"
+********************************************************************
+
+[root@eu-webhook rotated]# cat /root/logrotation.sh
+#!/bin/bash
+set -x
+
+date1=`date +%Y%m%d`
+Filename='/net/tmp/audit_log/amaro_cee/audit_log.log'
+
+for file in $Filename
+do
+cp $file $file"_$date1".log
+> "$file"
+chown apache:apache $file"_$date1".log
+gzip $file"_$date1".log
+done
+
+
