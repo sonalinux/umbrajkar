@@ -1,0 +1,1 @@
+￼for i in {7..100}; do     DATE=$(date --date="$i days ago" +%Y-%m-%d);/usr/local/bin/aws --profile sysbackup s3 mv --recursive /var/log/apps/whatsapp_dequer_instance3/old_logs/"$date1" s3://nc-serverbackup-us/wawebhook-3/whatsapp_dequer_instance3/"$date1"; done 
