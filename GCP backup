@@ -1,0 +1,8 @@
+
+#!/bin/bash
+
+DATE30=`date --date='30 days ago' +%Y-%m-%d`
+
+
+gsutil mv /var/log/apps/rcs-incoming-generation/ncoming_logs-"$DATE30"*.gz gs://in-log-backup/rcs-webhook/
+
