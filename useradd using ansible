@@ -1,0 +1,17 @@
+root@ansible ansible]# cat useradd.yml
+- hosts: hosts
+  remote_user: p9uHmgts
+  sudo: true
+  vars:
+    users:
+    - username: "devtest"
+  
+  tasks:
+        - name: Creating user account with password
+          user: 
+            name: "{{ item.username }}"
+            shell: /bin/bash
+            comment: "devtest user create"
+            password: $5$OWVbigB34cP5zra2$kXlak2qFbMJzMzwnMmLL.hoPw7FV9M1QMk0i529CB54
+          with_items: "{{ users }}"
+
