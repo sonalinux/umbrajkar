@@ -1,0 +1,7 @@
+blk ; parted /dev/nvme3n1
+parted /dev/nvme3n1
+(parted) mklabel gpt
+(parted) mkpart primary xfs 1MiB 100%
+or mkpart primary linux-swap 1MiB 100%
+(parted) print
+(parted) quit
