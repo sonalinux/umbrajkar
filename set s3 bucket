@@ -1,0 +1,21 @@
+AWS cli installation steps
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+export PATH=$PATH:/usr/local/bin/aws
+
+add keys into /root/.aws/credentials
+OR
+configure AWS cli
+aws configure
+
+script to move logs
+#!/bin/bash
+set -x
+
+date1=`date --date="1 day ago" +%Y%m%d`
+mkdir -p /var/log/apps/elredisbridge/old_logs/"$date1"
+
+mv /var/log/apps/elredisbridge/*"$date1"* /var/log/apps/elredisbridge/old_logs/"$date1"
+/usr/local/bin/aws s3 mv --recursive /var/log/apps/elredisbridge/old_logs/"$date1" s3://nc-serverbackup-mu/el-redis-2/"$date1"/
