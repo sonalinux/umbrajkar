@@ -1,0 +1,6 @@
+lsblk
+growpart /dev/nvme3n1 1
+df -Th
+xfs_growfs -d /database
+df -h
+lsblk
